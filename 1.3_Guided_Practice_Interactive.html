@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>1.3 Guided Practice – Battle Run (Interactive)</title>
+<style>
+:root{color-scheme:light dark;--navy:#17365d;--band:#eaf1f8;--bg:#fff;--fg:#263442;--muted:#5f6b76;--ok:#1b7f3b;--okbg:#e3f5e8;--bad:#b3261e;--badbg:#fde8e6;--card:#fff;--line:#17365d;--head:#17365d;--soft:#f4f7fb}
+@media(prefers-color-scheme:dark){:root{--navy:#9ec1ee;--band:#1e2b3a;--bg:#14191f;--fg:#e3e8ee;--muted:#9aa7b4;--ok:#7fd69a;--okbg:#17321f;--bad:#ff9a92;--badbg:#3a1b19;--card:#1a212a;--line:#4a6a94;--head:#2d5a94;--soft:#1a212a}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.5 Arial,Helvetica,sans-serif}
+.wrap{max-width:960px;margin:0 auto;padding:20px 16px 60px}
+h1{color:var(--navy);font-size:26px;margin:0 0 4px}h2{color:var(--navy);font-size:21px;margin:24px 0 8px}h3{color:var(--navy);font-size:17px;margin:16px 0 6px}
+.sub{color:var(--muted);margin:0 0 16px}
+.tabs{display:flex;flex-wrap:wrap;gap:6px;border-bottom:2px solid var(--line);margin:18px 0 16px}
+.tab{background:var(--soft);color:var(--navy);border:1px solid var(--line);border-bottom:none;border-radius:8px 8px 0 0;padding:9px 16px;font:inherit;font-weight:bold;cursor:pointer}
+.tab[aria-selected=true]{background:var(--head);color:#fff}
+.panel{display:none}.panel.on{display:block}
+.sub-tabs{display:flex;gap:6px;margin:10px 0}
+.pill{background:var(--soft);color:var(--navy);border:1px solid var(--line);border-radius:20px;padding:6px 14px;font:inherit;cursor:pointer}
+.pill[aria-selected=true]{background:var(--head);color:#fff}
+.card{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:14px 16px;margin:12px 0}
+table{width:100%;border-collapse:collapse;background:var(--card);margin:8px 0}
+caption{text-align:left;font-style:italic;font-size:.9rem;color:var(--muted);padding:4px 0}
+th,td{border:1px solid var(--line);padding:7px 8px;text-align:center;font-size:.92rem}
+thead th{background:var(--head);color:#fff}
+tbody tr:nth-child(odd){background:var(--band)}
+tbody th{color:var(--navy)}
+td.l{text-align:left}
+input,select,textarea{font:inherit;color:var(--fg);background:var(--bg);border:1px solid var(--line);border-radius:5px;padding:5px 6px}
+td input[type=number]{width:70px}td input[type=text]{width:100%;min-width:150px}
+textarea{width:100%;min-height:70px;resize:vertical}
+button.btn{background:var(--head);color:#fff;border:none;border-radius:6px;padding:8px 14px;font:inherit;cursor:pointer;margin:4px 6px 4px 0}
+button.btn.alt{background:transparent;color:var(--navy);border:1px solid var(--line)}
+button.btn:hover{opacity:.88}
+td.ok{background:var(--okbg)!important}td.bad{background:var(--badbg)!important}
+.msg{margin:8px 0;padding:8px 12px;border-radius:6px;background:var(--soft);border:1px solid var(--line)}
+.msg.ok{background:var(--okbg);color:var(--ok)}.msg.bad{background:var(--badbg);color:var(--bad)}
+.model{display:none;margin-top:6px;padding:8px 12px;border-left:4px solid var(--head);background:var(--soft)}
+.model.on{display:block}
+.q{margin:14px 0}.q label{font-weight:bold;display:block;margin-bottom:4px}
+.step{display:flex;gap:6px;align-items:flex-start;margin:6px 0}
+.step .n{min-width:26px;padding-top:7px;font-weight:bold;color:var(--navy);text-align:right}
+.step textarea{min-height:44px}
+.step button{padding:4px 8px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px}
+.grid label{font-size:.85rem;color:var(--muted);display:block}.grid input,.grid select{width:100%}
+.stat{text-align:center;padding:12px;border:1px solid var(--line);border-radius:8px;background:var(--soft)}
+.stat b{display:block;font-size:1.5rem;color:var(--navy)}
+.stat span{font-size:.82rem;color:var(--muted)}
+.checks li{list-style:none;margin:3px 0}
+ul.checks{padding-left:0}
+.scroll{overflow-x:auto}
+@media(max-width:600px){th,td{font-size:.8rem;padding:5px}}
+</style></head><body><div class="wrap">
+
+<h1>1.3 Guided Practice</h1>
+<p class="sub">Trace and Write a Plain-Language Algorithm for a “Battle Run”</p>
+
+<div class="card">
+<p style="margin-top:0">An algorithm is a set of instructions. A <b>plain-language algorithm</b> describes how to solve a problem using ordinary words. A <b>battle run</b> is one sequence in which two characters take turns attacking until one wins.</p>
+<p style="margin-bottom:0"><b>A good algorithm is:</b> <b>Ordered</b> (clear sequence), <b>Specific</b> (exact steps), <b>Repeatable</b> (same result for anyone), <b>Conditional</b> (depends on what happens), and <b>Complete</b> (clear beginning, middle, end).</p>
+</div>
+
+<div class="tabs" role="tablist" id="mainTabs">
+<button class="tab" role="tab" aria-selected="true" data-p="p0">Review</button>
+<button class="tab" role="tab" aria-selected="false" data-p="p1">Activity 1</button>
+<button class="tab" role="tab" aria-selected="false" data-p="p2">Activity 2</button>
+<button class="tab" role="tab" aria-selected="false" data-p="p3">Activity 3</button>
+<button class="tab" role="tab" aria-selected="false" data-p="p4">Submit</button>
+</div>
+
+<!-- REVIEW -->
+<section class="panel on" id="p0">
+<div class="sub-tabs" id="revTabs">
+<button class="pill" aria-selected="true" data-r="r0">Weak</button>
+<button class="pill" aria-selected="false" data-r="r1">Strong</button>
+<button class="pill" aria-selected="false" data-r="r2">Difference</button>
+</div>
+<div class="card rev" id="r0"><h3>Weak algorithm</h3><p>“The hero fights the monster. They attack each other until someone wins.”</p><p>Too vague: who attacks first? How is damage calculated? When is health checked? When does it end? It could run forever, and the cloud bill comes every month.</p></div>
+<div class="card rev" id="r1" style="display:none"><h3>Strong algorithm</h3>
+<p>Click each step to mark it as <b>Ordered</b>, <b>Conditional</b>, or <b>Repeated</b>.</p>
+<div id="strongList"></div></div>
+<div class="card rev" id="r2" style="display:none"><h3>Examine the difference</h3><p>The strong algorithm meets all five qualities. You know who attacks first, how health drops, when defeat is checked, and when the battle stops. You just follow the steps until someone runs out of health.</p><p><b>Push your thinking:</b> Which steps are Boolean logic? Which are repetition? Which are conditions? (Use the Strong tab to explore.)</p></div>
+</section>
+
+<!-- ACTIVITY 1 -->
+<section class="panel" id="p1">
+<h2>Activity 1: Trace the Battle Run</h2>
+<table style="max-width:420px"><caption>Character Data Table</caption><thead><tr><th>Character</th><th>Health</th><th>Attack</th></tr></thead>
+<tbody><tr><th>Knight</th><td>25</td><td>6</td></tr><tr><th>Slime</th><td>18</td><td>3</td></tr></tbody></table>
+<p>Fill in each row of the trace using the strong algorithm (health after the attack). Use <b>Check my work</b> for feedback, or <b>Show next row</b> if you get stuck.</p>
+<div class="sub-tabs" id="traceTabs">
+<button class="pill" aria-selected="true" data-t="tA">Knight attacks first</button>
+<button class="pill" aria-selected="false" data-t="tB">Slime attacks first</button>
+</div>
+<div id="tA" class="traceBox"></div>
+<div id="tB" class="traceBox" style="display:none"></div>
+
+<h3>After you trace, answer:</h3>
+<div id="a1q"></div>
+</section>
+
+<!-- ACTIVITY 2 -->
+<section class="panel" id="p2">
+<h2>Activity 2: Modify the Algorithm (Armor Buffering)</h2>
+<p>After each character receives damage, that character recovers 1 health. Edit the steps below so your algorithm is still ordered, specific, repeatable, conditional, and complete.</p>
+<button class="btn alt" id="loadStarter">Load the strong algorithm as a starting point</button>
+<button class="btn alt" id="addStep">+ Add step</button>
+<div id="algoList"></div>
+<button class="btn" id="checkAlgo">Quick self-check</button>
+<div id="algoFeedback"></div>
+
+<h3>Test it: run the simulator</h3>
+<div class="card">
+<div class="grid">
+<div><label>First attacker</label><select id="sFirst"><option>Knight</option><option>Slime</option></select></div>
+<div><label>Armor buffering</label><select id="sArmor"><option value="1">On (+1 after damage)</option><option value="0">Off</option></select></div>
+<div><label>Knight health</label><input type="number" id="sKH" value="25" min="1"></div>
+<div><label>Knight attack</label><input type="number" id="sKA" value="6" min="0"></div>
+<div><label>Slime health</label><input type="number" id="sSH" value="18" min="1"></div>
+<div><label>Slime attack</label><input type="number" id="sSA" value="3" min="0"></div>
+</div>
+<div id="simOut"></div>
+</div>
+</section>
+
+<!-- ACTIVITY 3 -->
+<section class="panel" id="p3">
+<h2>Activity 3: Final Thought</h2>
+<p>Cost isn’t only money. It can be time, effort, memory, processing power, or cloud resources. This panel uses the battle you last ran in the Activity 2 simulator.</p>
+<div class="card">
+<div class="grid">
+<div><label>How many battle runs?</label><select id="runsSel"><option value="1">1 (once per day)</option><option value="365">365 (once a day for a year)</option><option value="1000000" selected>1,000,000 (one gaming session)</option><option value="custom">Custom…</option></select></div>
+<div id="customWrap" style="display:none"><label>Custom runs</label><input type="number" id="runsCustom" value="5000" min="1"></div>
+<div><label>Assumed $ per 1M steps (hypothetical)</label><input type="number" id="rate" value="0.50" step="0.01" min="0"></div>
+</div>
+<div class="grid" style="margin-top:12px" id="costOut"></div>
+<p class="sub" style="margin-bottom:0" id="costNote"></p>
+</div>
+<div id="a3q"></div>
+</section>
+
+<!-- SUBMIT -->
+<section class="panel" id="p4">
+<h2>Submit</h2>
+<p>Your answers stay in this page while it’s open. When you’re done, download a Word-compatible file (opens in Microsoft Word) and upload it to your assignment.</p>
+<div class="q"><label for="stuName">Your name</label><input type="text" id="stuName" style="width:100%;max-width:340px"></div>
+<button class="btn" id="dlBtn">Download my responses (.doc)</button>
+<button class="btn alt" id="cpBtn">Copy responses as text</button>
+<div id="expMsg"></div>
+<p class="sub"><b>Desktop:</b> Start Assignment → Upload File → Choose File → Open → Submit Assignment. <b>Mobile:</b> Submit Assignment → File Upload → select file → Submit.</p>
+</section>
+
+</div>
+<script>
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const STEPS_PER_TURN=6;
+
+/* ---------- simulator ---------- */
+function sim(first,armor,kh=25,ka=6,sh=18,sa=3){
+  const hp={Knight:kh,Slime:sh},atk={Knight:ka,Slime:sa};
+  let att=first,rows=[],winner=null,loop=false;
+  for(let t=1;;t++){
+    if(t>500){loop=true;break}
+    const def=att==='Knight'?'Slime':'Knight';
+    hp[def]-=atk[att];
+    let txt=`${att} attacks ${def} for ${atk[att]} damage.`;
+    if(hp[def]<=0){winner=att;txt+=` ${def} is defeated. ${att} wins.`;rows.push({turn:t,att,def,k:hp.Knight,s:hp.Slime,txt});break}
+    if(armor){hp[def]+=1;txt+=` ${def} recovers 1 health from armor.`}
+    rows.push({turn:t,att,def,k:hp.Knight,s:hp.Slime,txt});
+    att=def;
+  }
+  return{rows,winner,loop,turns:loop?500:rows.length};
+}
+
+/* ---------- tabs ---------- */
+$('#mainTabs').addEventListener('click',e=>{const b=e.target.closest('.tab');if(!b)return;
+  $$('#mainTabs .tab').forEach(x=>x.setAttribute('aria-selected',x===b));
+  $$('.panel').forEach(p=>p.classList.toggle('on',p.id===b.dataset.p));
+  if(b.dataset.p==='p3')updateCost();});
+$('#revTabs').addEventListener('click',e=>{const b=e.target.closest('.pill');if(!b)return;
+  $$('#revTabs .pill').forEach(x=>x.setAttribute('aria-selected',x===b));
+  $$('.rev').forEach(p=>p.style.display=p.id===b.dataset.r?'block':'none');});
+$('#traceTabs').addEventListener('click',e=>{const b=e.target.closest('.pill');if(!b)return;
+  $$('#traceTabs .pill').forEach(x=>x.setAttribute('aria-selected',x===b));
+  $$('.traceBox').forEach(p=>p.style.display=p.id===b.dataset.t?'block':'none');});
+
+/* ---------- review: strong algorithm tagger ---------- */
+const strong=[
+["Start the battle with a hero and a monster.","Ordered"],
+["Give each character a health value and an attack value.","Ordered"],
+["The hero attacks first.","Ordered"],
+["Subtract the hero’s attack value from the monster’s health.","Ordered"],
+["Check whether the monster’s health is 0 or less.","Conditional"],
+["If the monster’s health is 0 or less, the hero wins, and the battle ends.","Conditional"],
+["If the monster is still alive, the monster attacks the hero.","Conditional"],
+["Subtract the monster’s attack value from the hero’s health.","Ordered"],
+["Check whether the hero’s health is 0 or less.","Conditional"],
+["If the hero’s health is 0 or less, the monster wins, and the battle ends.","Conditional"],
+["If both characters are still alive, repeat the attack steps until one character’s health reaches 0 or less.","Repeated"]];
+const sl=$('#strongList');
+strong.forEach(([t,ans],i)=>{
+  const d=document.createElement('div');d.className='step';
+  d.innerHTML=`<div class="n">${i+1}.</div><div style="flex:1">${esc(t)}<br><span class="tags"></span><span class="fb" style="margin-left:6px"></span></div>`;
+  ['Ordered','Conditional','Repeated'].forEach(k=>{
+    const b=document.createElement('button');b.className='btn alt';b.style.padding='2px 10px';b.textContent=k;
+    b.onclick=()=>{const fb=d.querySelector('.fb');const ok=k===ans;fb.textContent=ok?'✓ '+k:'✗ Try again';fb.style.color=ok?'var(--ok)':'var(--bad)'};
+    d.querySelector('.tags').appendChild(b)});
+  sl.appendChild(d)});
+
+/* ---------- Activity 1: trace tables ---------- */
+const traceState={};
+function makeTrace(id,first){
+  const exp=sim(first,false).rows,N=6,box=$('#'+id);
+  traceState[id]={first,exp};
+  let h=`<div class="scroll"><table><caption>Battle Trace Table, ${first} Attacks First</caption><thead><tr><th>Turn</th><th>Attacker</th><th>Defender</th><th>Knight Health</th><th>Slime Health</th><th>What Happened?</th></tr></thead><tbody>`;
+  for(let i=0;i<N;i++){
+    const opt='<option value=""></option><option>Knight</option><option>Slime</option>';
+    h+=`<tr data-i="${i}"><th>${i+1}</th><td><select class="att">${opt}</select></td><td><select class="def">${opt}</select></td><td><input type="number" class="k"></td><td><input type="number" class="s"></td><td class="l"><input type="text" class="w" placeholder="${first==='Knight'&&i===0?'Knight attacks Slime for ___ damage.':'Describe what happened'}"></td></tr>`}
+  h+=`</tbody></table></div>
+  <button class="btn" data-act="check">Check my work</button><button class="btn alt" data-act="next">Show next row</button><button class="btn alt" data-act="clear">Clear</button><div class="msg" style="display:none"></div>`;
+  box.innerHTML=h;
+  box.addEventListener('click',e=>{const a=e.target.dataset.act;if(!a)return;
+    const rows=[...box.querySelectorAll('tbody tr')];
+    if(a==='clear'){rows.forEach(r=>{r.querySelectorAll('input,select').forEach(x=>x.value='');r.querySelectorAll('td').forEach(x=>x.className=x.classList.contains('l')?'l':'')});box.querySelector('.msg').style.display='none'}
+    if(a==='next'){
+      const i=rows.findIndex((r,ix)=>ix<exp.length&&!(r.querySelector('.att').value&&r.querySelector('.k').value!==''&&r.querySelector('.s').value!==''));
+      if(i<0){showMsg(box,'All needed rows are filled in. Click Check my work.','');return}
+      const r=rows[i],x=exp[i];r.querySelector('.att').value=x.att;r.querySelector('.def').value=x.def;r.querySelector('.k').value=x.k;r.querySelector('.s').value=x.s;r.querySelector('.w').value=x.txt}
+    if(a==='check'){
+      let good=0,total=exp.length,extra=false;
+      rows.forEach((r,i)=>{
+        const c={att:r.querySelector('.att'),def:r.querySelector('.def'),k:r.querySelector('.k'),s:r.querySelector('.s')};
+        Object.values(c).forEach(x=>x.parentElement.className='');
+        if(i<exp.length){const x=exp[i];let all=true;
+          [['att',x.att],['def',x.def],['k',String(x.k)],['s',String(x.s)]].forEach(([n,v])=>{
+            const ok=c[n].value===v;if(!ok)all=false;c[n].parentElement.className=ok?'ok':(c[n].value===''?'':'bad')});
+          if(all)good++}
+        else if(Object.values(c).some(x=>x.value!=='')){extra=true;Object.values(c).forEach(x=>x.parentElement.className='bad')}});
+      let m=`${good} of ${total} rows fully correct.`;
+      if(extra)m+=' Rows marked red are not needed: the battle already ended.';
+      if(good===total&&!extra)m='🎉 Perfect trace! The battle ends on turn '+total+'.';
+      else if(good<total)m+=' Red cells are wrong; remember to subtract only the attacker’s attack value from the defender, one attack per turn.';
+      showMsg(box,m,good===total&&!extra?'ok':'bad')}
+  });
+}
+function showMsg(box,t,c){const m=box.querySelector('.msg');m.style.display='block';m.className='msg '+c;m.textContent=t}
+makeTrace('tA','Knight');makeTrace('tB','Slime');
+
+/* ---------- question blocks with model answers ---------- */
+function qBlock(mount,id,items){
+  $(mount).innerHTML=items.map((q,i)=>`<div class="q"><label for="${id}${i}">${i+1}. ${q[0]}</label><textarea id="${id}${i}" placeholder="Type your answer…"></textarea><button class="btn alt" data-m="${id}${i}">Show model answer</button><div class="model" id="m_${id}${i}">${q[1]}</div></div>`).join('');
+  $(mount).addEventListener('click',e=>{const m=e.target.dataset.m;if(!m)return;const d=$('#m_'+m);d.classList.toggle('on');e.target.textContent=d.classList.contains('on')?'Hide model answer':'Show model answer'});
+}
+qBlock('#a1q','a1_',[
+["What changes when the starting attacker changes?","The battle takes one more turn (6 instead of 5) and the Knight ends with less health (16 instead of 19), because the Slime gets an extra attack."],
+["Does the same character win both times?","Yes. The Knight wins both times: it deals 6 damage per turn against the Slime’s 3 and has more health."],
+["Why does the order of steps matter in an algorithm?","Order decides who is damaged first, when defeat is checked, and when the battle ends. If the defeat check came after the next attack, a defeated Slime would still hit the Knight. Changing the order changes the outcome."]]);
+const a3items=["How many repeated steps did your battle run require?","What would happen if this battle run had to happen once per day?","What would happen if it had to happen 1,000,000 times during one gaming session?","Why might a poorly written algorithm become expensive, slow, or frustrating at scale?"];
+qBlock('#a3q','a3_',[
+[a3items[0],"Use the number from the calculator above: turns × the steps repeated each turn. For the armor version with the Knight first: 7 turns, up to 42 step executions."],
+[a3items[1],"Almost nothing. A few turns is a tiny amount of time, memory, and processing."],
+[a3items[2],"About 7 million turns and ~42 million step executions. Each run is cheap, but the total uses real processing time and cloud resources."],
+[a3items[3],"Any wasted or unclear step is multiplied by every repetition. A vague algorithm with no stopping point could loop forever. At scale, small inefficiencies add up to lag, higher bills, and more effort to fix."]]);
+
+/* ---------- Activity 2: algorithm builder ---------- */
+let algo=[''];
+function renderAlgo(){
+  $('#algoList').innerHTML='';
+  algo.forEach((t,i)=>{
+    const d=document.createElement('div');d.className='step';
+    d.innerHTML=`<div class="n">${i+1}.</div><textarea rows="2" placeholder="Write step ${i+1}…">${esc(t)}</textarea><button class="btn alt" title="Move up">↑</button><button class="btn alt" title="Move down">↓</button><button class="btn alt" title="Delete">✕</button>`;
+    const [ta,up,dn,del]=[d.querySelector('textarea'),...d.querySelectorAll('button')];
+    ta.oninput=()=>algo[i]=ta.value;
+    up.onclick=()=>{if(i>0){[algo[i-1],algo[i]]=[algo[i],algo[i-1]];renderAlgo()}};
+    dn.onclick=()=>{if(i<algo.length-1){[algo[i+1],algo[i]]=[algo[i],algo[i+1]];renderAlgo()}};
+    del.onclick=()=>{algo.splice(i,1);if(!algo.length)algo=[''];renderAlgo()};
+    $('#algoList').appendChild(d)});
+}
+$('#addStep').onclick=()=>{algo.push('');renderAlgo()};
+$('#loadStarter').onclick=()=>{if(algo.some(x=>x.trim())&&!confirm('Replace your current steps with the starter?'))return;algo=strong.map(s=>s[0]);renderAlgo()};
+$('#checkAlgo').onclick=()=>{
+  const t=algo.join(' ').toLowerCase(),n=algo.filter(x=>x.trim()).length;
+  const tests=[
+   [n>=5,'Ordered: at least 5 numbered steps in a clear sequence.','Add more steps; each action should have its own step.'],
+   [/armor|recover|add 1|\+ ?1|increase/.test(t),'Armor buffering: you mention recovering 1 health.','Add a step where the defender recovers 1 health after taking damage.'],
+   [/subtract/.test(t)&&/\d/.test(t)||/attack value/.test(t),'Specific: damage is calculated with exact values.','Say exactly what is subtracted from what.'],
+   [/\bif\b/.test(t)&&/0 or less|zero|defeated|dead/.test(t),'Conditional: you check for defeat with an “if”.','Add an “if health is 0 or less …” step.'],
+   [/repeat|loop|until/.test(t),'Repeatable loop: the attack steps repeat.','Add a step that repeats the attack steps until someone is defeated.'],
+   [/(start|begin)/.test(t)&&/(end|wins|stops)/.test(t),'Complete: clear beginning and ending.','Include a clear start and a step that says the battle ends.']];
+  let html='<ul class="checks">'+tests.map(([ok,y,nn])=>`<li style="color:${ok?'var(--ok)':'var(--bad)'}">${ok?'✓ '+y:'✗ '+nn}</li>`).join('')+'</ul><p class="sub">Think about it too: should a defeated character recover 1 health? Decide, and make your steps say so. This quick check only looks for key words; it is not a grade.</p>';
+  $('#algoFeedback').innerHTML='<div class="msg">'+html+'</div>'};
+renderAlgo();
+
+/* ---------- simulator UI ---------- */
+let lastSim=null;
+function runSim(){
+  const g=id=>Math.max(0,parseInt($(id).value)||0);
+  const first=$('#sFirst').value,armor=$('#sArmor').value==='1';
+  const r=sim(first,armor,Math.max(1,g('#sKH')),g('#sKA'),Math.max(1,g('#sSH')),g('#sSA'));
+  lastSim={...r,first,armor};
+  let rows=r.rows.slice(0,12);
+  let h='';
+  if(r.loop)h+=`<div class="msg bad">⚠ This battle never ends (500-turn safety limit hit). Armor recovery cancels out the damage. That’s exactly how an algorithm without a reachable stopping point costs you money.</div>`;
+  else h+=`<div class="msg ok"><b>${r.winner} wins</b> after <b>${r.turns}</b> turns.</div>`;
+  h+='<div class="scroll"><table><caption>Simulator trace'+(r.rows.length>12?' (first 12 turns shown)':'')+'</caption><thead><tr><th>Turn</th><th>Attacker</th><th>Defender</th><th>Knight Health</th><th>Slime Health</th><th>What Happened?</th></tr></thead><tbody>'+
+   rows.map(x=>`<tr><th>${x.turn}</th><td>${x.att}</td><td>${x.def}</td><td>${x.k}</td><td>${x.s}</td><td class="l">${esc(x.txt)}</td></tr>`).join('')+'</tbody></table></div>';
+  $('#simOut').innerHTML=h;updateCost();
+}
+['#sFirst','#sArmor','#sKH','#sKA','#sSH','#sSA'].forEach(s=>$(s).addEventListener('input',runSim));
+
+/* ---------- Activity 3: cost ---------- */
+const fmt=n=>n.toLocaleString('en-US',{maximumFractionDigits:2});
+function updateCost(){
+  if(!lastSim)return;
+  $('#customWrap').style.display=$('#runsSel').value==='custom'?'block':'none';
+  const runs=$('#runsSel').value==='custom'?(parseInt($('#runsCustom').value)||1):parseInt($('#runsSel').value);
+  const turns=lastSim.turns,steps=turns*STEPS_PER_TURN,rate=parseFloat($('#rate').value)||0;
+  const totSteps=steps*runs,cost=totSteps/1e6*rate;
+  const card=(b,s)=>`<div class="stat"><b>${b}</b><span>${s}</span></div>`;
+  $('#costOut').innerHTML=card(turns,'turns per battle')+card(steps,'step executions per battle (≈6 per turn)')+card(fmt(runs*turns),'total turns')+card(fmt(totSteps),'total step executions')+card('$'+fmt(cost),'hypothetical cost');
+  $('#costNote').textContent=lastSim.loop?'Your last simulation never ended, so this is capped at 500 turns per run.':`Based on: ${lastSim.first} attacks first, armor ${lastSim.armor?'on':'off'}.`;
+}
+['#runsSel','#runsCustom','#rate'].forEach(s=>$(s).addEventListener('input',updateCost));
+runSim();
+
+/* ---------- export ---------- */
+function collect(asText){
+  const name=$('#stuName').value||'';
+  const traces=['tA','tB'].map(id=>{
+    const box=$('#'+id),title=traceState[id].first+' attacks first';
+    const rows=[...box.querySelectorAll('tbody tr')].map(r=>[r.querySelector('th').textContent,r.querySelector('.att').value,r.querySelector('.def').value,r.querySelector('.k').value,r.querySelector('.s').value,r.querySelector('.w').value]).filter(r=>r.slice(1).some(x=>x!==''));
+    return{title,rows}});
+  const qs=(id,n)=>Array.from({length:n},(_,i)=>$('#'+id+i).value);
+  return{name,traces,a1:qs('a1_',3),algo:algo.filter(x=>x.trim()),a3:qs('a3_',4),
+    sim:lastSim?`${lastSim.first} attacks first, armor ${lastSim.armor?'on':'off'}: ${lastSim.winner||'no winner'} after ${lastSim.turns} turns`:''};
+}
+const q1=["What changes when the starting attacker changes?","Does the same character win both times?","Why does the order of steps matter in an algorithm?"];
+function toText(c){
+  let t=`1.3 Guided Practice: Battle Run\nName: ${c.name}\n\nACTIVITY 1\n`;
+  c.traces.forEach(tr=>{t+=`\n${tr.title}\nTurn | Attacker | Defender | Knight Health | Slime Health | What Happened\n`+tr.rows.map(r=>r.join(' | ')).join('\n')+'\n'});
+  q1.forEach((q,i)=>t+=`\n${i+1}. ${q}\n${c.a1[i]}\n`);
+  t+='\nACTIVITY 2: Revised algorithm\n'+c.algo.map((s,i)=>`${i+1}. ${s}`).join('\n')+`\n\nSimulator check: ${c.sim}\n\nACTIVITY 3\n`;
+  a3items.forEach((q,i)=>t+=`\n${i+1}. ${q}\n${c.a3[i]}\n`);return t}
+function toHTML(c){
+  const tb=tr=>`<h3>${esc(tr.title)}</h3><table border="1" cellpadding="4" style="border-collapse:collapse"><tr style="background:#17365d;color:#fff"><th>Turn</th><th>Attacker</th><th>Defender</th><th>Knight Health</th><th>Slime Health</th><th>What Happened?</th></tr>${tr.rows.map(r=>'<tr>'+r.map(x=>`<td>${esc(x)}</td>`).join('')+'</tr>').join('')}</table>`;
+  return `<html><head><meta charset="utf-8"><style>body{font-family:Arial;font-size:11pt}h1,h2,h3{color:#17365d}</style></head><body><h1>1.3 Guided Practice: Battle Run</h1><p><b>Name:</b> ${esc(c.name)}</p><h2>Activity 1</h2>${c.traces.map(tb).join('')}${q1.map((q,i)=>`<p><b>${i+1}. ${q}</b><br>${esc(c.a1[i]).replace(/\n/g,'<br>')}</p>`).join('')}<h2>Activity 2</h2><ol>${c.algo.map(s=>`<li>${esc(s)}</li>`).join('')}</ol><p><i>Simulator check: ${esc(c.sim)}</i></p><h2>Activity 3</h2>${a3items.map((q,i)=>`<p><b>${i+1}. ${q}</b><br>${esc(c.a3[i]).replace(/\n/g,'<br>')}</p>`).join('')}</body></html>`}
+$('#dlBtn').onclick=()=>{
+  const blob=new Blob(['\ufeff'+toHTML(collect())],{type:'application/msword'}),a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);a.download='1.3_Guided_Practice_Battle_Run.doc';document.body.appendChild(a);a.click();a.remove();
+  $('#expMsg').innerHTML='<div class="msg ok">Downloaded. If nothing happened, use “Copy responses as text” and paste into Word.</div>'};
+$('#cpBtn').onclick=async()=>{
+  const t=toText(collect());
+  try{await navigator.clipboard.writeText(t)}catch(e){const x=document.createElement('textarea');x.value=t;document.body.appendChild(x);x.select();document.execCommand('copy');x.remove()}
+  $('#expMsg').innerHTML='<div class="msg ok">Copied. Paste into a Word document.</div>'};
+</script></body></html>

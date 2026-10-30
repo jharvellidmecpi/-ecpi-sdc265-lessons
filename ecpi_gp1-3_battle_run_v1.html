@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- SECURITY: this meta CSP allows only this page's own inline script and style (by hash), same-origin images, and no network requests.
+     If you edit the inline style or script blocks, regenerate the hashes (re-run the build) or the page will stop working.
+     TODO for hosting team: also set server headers (CSP, X-Content-Type-Options, Referrer-Policy, frame-ancestors for Canvas). -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self'; style-src 'sha256-iljJZABNYEAl4lKUcEcx4DiYZ+mmJFRoPqF1RF1+PeQ='; script-src 'sha256-pTqsgQWdiL33oYcLXD766GjmMyqjNsJzxSDrBzJwxuk='; base-uri 'none'; form-action 'none'">
+<title>1.3 Guided Practice: Battle Run</title>
+<style>
+:root{
+  --blue-dark:#0d1b3e;--blue-primary:#295ea8;--blue-hover:#1f4a87;--blue-faint:#eef2f9;
+  --accent:#aeecef;--gold:#e8b84b;--red:#c0392b;
+  --text:#1a2a3a;--text-light:#3d5570;--gray-100:#f4f6f9;--gray-200:#e2e8f0;--text-inverse:#e8f0f8;
+  --ok-text:#14663a;--ok-bg:#e6f4ec;--bad-text:#9e2a1f;--bad-bg:#fbeae8;--warn-bg:#fff8e6;
+  --ecpi-gold:#ffc700;
+  --radius-i:8px;--radius-s:4px;
+  --font-main:Inter,Roboto,'Helvetica Neue','Arial Nova','Nimbus Sans',Arial,sans-serif;
+  --font-code:ui-monospace,SFMono-Regular,Menlo,Consolas,'Liberation Mono',monospace;
+  --fs-title:30px;--fs-section:24px;--fs-callout:20px;--fs-body:17px;--fs-nav:16px;--fs-ui:14px;--fs-meta:13px;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background:var(--gray-100);color:var(--text);font-family:var(--font-main);font-size:var(--fs-body);font-weight:400;line-height:1.55}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.skip{position:absolute;left:8px;top:-80px;z-index:20;background:#fff;color:var(--blue-dark);border:2px solid var(--blue-primary);border-radius:var(--radius-i);padding:12px 16px;font-size:var(--fs-ui);font-weight:700}
+.skip:focus{top:8px}
+:focus-visible{outline:3px solid var(--blue-primary);outline-offset:2px}
+.top :focus-visible,.code :focus-visible{outline-color:var(--accent)}
+header.top{background:var(--blue-dark);color:var(--text-inverse);border-bottom:4px solid var(--ecpi-gold);padding:24px 24px 16px}
+.hwrap{max-width:960px;margin:0 auto;display:flex;gap:24px;align-items:center;flex-wrap:wrap}
+.hwrap img{height:48px;width:auto;max-width:100%}
+.eyebrow{margin:0;font-size:var(--fs-ui);font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--accent)}
+h1{margin:4px 0 0;font-size:var(--fs-title);line-height:1.25;font-weight:700;color:#fff}
+.prog{max-width:960px;margin:16px auto 0;font-size:var(--fs-ui);font-weight:700}
+progress{display:block;width:100%;height:12px;margin-top:8px;border:0;border-radius:var(--radius-s);background:rgba(255,255,255,.22);appearance:none;-webkit-appearance:none}
+progress::-webkit-progress-bar{background:rgba(255,255,255,.22);border-radius:var(--radius-s)}
+progress::-webkit-progress-value{background:var(--accent);border-radius:var(--radius-s)}
+progress::-moz-progress-bar{background:var(--accent);border-radius:var(--radius-s)}
+nav.tabsnav{background:#fff;border-bottom:2px solid var(--gray-200)}
+.tabs{max-width:960px;margin:0 auto;padding:16px 24px;display:flex;flex-wrap:wrap;gap:8px}
+.tab,.pill{min-height:44px;padding:8px 16px;border:2px solid var(--blue-primary);border-radius:var(--radius-i);background:#fff;color:var(--blue-dark);font-family:inherit;font-size:var(--fs-nav);font-weight:700;line-height:1.2;cursor:pointer}
+.pill{font-size:var(--fs-ui)}
+.tab:hover,.pill:hover{background:var(--blue-faint)}
+.tab[aria-selected=true],.pill[aria-selected=true]{background:var(--blue-dark);border-color:var(--blue-dark);color:#fff}
+.tab:active,.pill:active{background:var(--blue-primary);color:#fff}
+.pills{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0}
+main{display:block;max-width:960px;margin:0 auto;padding:24px 24px 64px}
+main:focus{outline:none}
+h2{margin:0 0 16px;font-size:var(--fs-section);line-height:1.3;font-weight:700;color:var(--blue-dark)}
+h2:focus{outline:none}
+h3{margin:32px 0 8px;font-size:var(--fs-callout);line-height:1.3;font-weight:700;color:var(--blue-dark)}
+p{margin:0 0 16px}
+ul,ol{margin:0 0 16px;padding-left:28px}
+li{margin:4px 0}
+code{font-family:var(--font-code);font-size:.95em;background:var(--blue-faint);padding:1px 6px;border-radius:var(--radius-s)}
+.card{background:#fff;border:1px solid var(--gray-200);border-radius:var(--radius-s);padding:24px;margin:16px 0}
+.callout{border-left:6px solid var(--blue-primary);background:var(--blue-faint);border-radius:var(--radius-s);padding:16px 24px;margin:16px 0}
+.callout.gold{border-left-color:var(--gold);background:var(--warn-bg)}
+.callout.dark{border-left:0;background:var(--blue-dark);color:var(--text-inverse)}
+.callout :last-child{margin-bottom:0}
+.callout h3{margin-top:0}
+.scroll{overflow-x:auto;margin:8px 0 16px}
+table{width:100%;border-collapse:collapse;background:#fff}
+caption{text-align:left;font-size:var(--fs-ui);font-weight:700;color:var(--text-light);padding:8px 0}
+th,td{border:1px solid #c3cfdd;padding:8px 12px;text-align:left;vertical-align:top;font-size:var(--fs-body)}
+thead th{background:var(--blue-dark);color:var(--accent);font-weight:700}
+tbody tr:nth-child(even){background:var(--gray-100)}
+tbody th{font-weight:700;color:var(--blue-dark)}
+td.c,th.c{text-align:center}
+td.mono,.mono{font-family:var(--font-code);font-size:16px}
+label,.lbl{font-size:var(--fs-ui);font-weight:700}
+.lbl{display:block;margin-bottom:4px}
+input,select,textarea{font-family:inherit;font-size:var(--fs-body);color:var(--text);background:#fff;border:2px solid var(--text-light);border-radius:var(--radius-i);padding:8px 12px;min-height:44px;max-width:100%}
+input,textarea{width:100%}
+select{min-width:140px}
+textarea{min-height:96px;resize:vertical;line-height:1.5}
+td input.num{width:96px}
+td input:not(.num),td textarea{min-width:180px}
+fieldset{border:1px solid #c3cfdd;border-radius:var(--radius-s);margin:16px 0;padding:12px 16px}
+legend{font-size:var(--fs-body);font-weight:700;padding:0 8px}
+.opts{display:flex;flex-wrap:wrap;gap:8px 24px}
+.opts label{font-size:var(--fs-body);font-weight:400;display:inline-flex;align-items:center;gap:8px;min-height:44px}
+.opts input{width:24px;height:24px;min-height:0;padding:0}
+.btn{min-height:44px;padding:8px 16px;margin:4px 8px 4px 0;border:2px solid var(--blue-primary);border-radius:var(--radius-i);background:var(--blue-primary);color:#fff;font-family:inherit;font-size:var(--fs-ui);font-weight:700;line-height:1.2;cursor:pointer}
+.btn:hover{background:var(--blue-hover);border-color:var(--blue-hover)}
+.btn:active{background:var(--blue-dark);border-color:var(--blue-dark)}
+.btn.alt{background:#fff;color:var(--blue-primary)}
+.btn.alt:hover{background:var(--blue-faint)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.bar{margin:8px 0}
+.msg{border-left:6px solid var(--blue-primary);background:var(--blue-faint);border-radius:var(--radius-s);padding:12px 16px;margin:12px 0}
+.msg:empty{padding:0;margin:0;border:0}
+.msg.ok{border-left-color:var(--ok-text);background:var(--ok-bg)}
+.msg.bad{border-left-color:var(--bad-text);background:var(--bad-bg)}
+.model{border-left:6px solid var(--gold);background:var(--warn-bg);border-radius:var(--radius-s);padding:12px 16px;margin:8px 0 16px}
+.q{margin:24px 0}
+.q label{display:block;font-size:var(--fs-body);margin-bottom:8px}
+.ok{background:var(--ok-bg)!important}
+.bad{background:var(--bad-bg)!important}
+.ok input,.ok select{border:3px solid var(--ok-text)}
+.bad input,.bad select{border:3px dashed var(--bad-text)}
+.shown input,.shown select{border:3px double var(--text-light)}
+.mark{display:block;margin-top:4px;font-size:var(--fs-ui);font-weight:700}
+.ok .mark{color:var(--ok-text)}
+.bad .mark{color:var(--bad-text)}
+.shown .mark{color:var(--text-light)}
+.code{margin:16px 0;padding:16px;background:var(--blue-dark);color:var(--text-inverse);border-radius:var(--radius-s);font-family:var(--font-code);font-size:16px;line-height:3;white-space:pre;overflow-x:auto}
+.code .blank{display:inline-block;white-space:nowrap}
+.code input{display:inline-block;width:auto;min-height:44px;padding:2px 8px;font-family:var(--font-code);font-size:16px;line-height:1.4;vertical-align:middle}
+.code .ok,.code .bad{background:none!important}
+.code .mark{display:inline;margin:0 0 0 4px;font-size:var(--fs-nav)}
+.code .ok .mark{color:var(--accent)}
+.code .bad .mark{color:#ffb4a9}
+.code .shown .mark{color:var(--text-inverse)}
+.code .cm{color:var(--accent)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:16px}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:16px;margin:16px 0}
+.stat{background:#fff;border:1px solid var(--gray-200);border-radius:var(--radius-s);padding:16px;text-align:center}
+.stat b{display:block;font-size:var(--fs-section);color:var(--blue-primary)}
+.stat span{font-size:var(--fs-ui);color:var(--text-light)}
+.step{display:flex;gap:8px;align-items:flex-start;flex-wrap:wrap;margin:8px 0}
+.step .n{min-width:32px;padding-top:10px;font-weight:700;text-align:right}
+.step textarea{flex:1 1 260px;min-height:64px}
+details{background:#fff;border:1px solid #c3cfdd;border-radius:var(--radius-s);padding:8px 16px;margin:16px 0}
+summary{min-height:44px;display:flex;align-items:center;font-weight:700;cursor:pointer;color:var(--blue-primary)}
+summary:hover{color:var(--blue-hover)}
+.pnav{display:flex;justify-content:space-between;flex-wrap:wrap;gap:16px;margin-top:32px;padding-top:16px;border-top:2px solid var(--gray-200)}
+footer{max-width:960px;margin:0 auto;padding:0 24px 32px;font-size:var(--fs-meta);color:var(--text-light)}
+@media(max-width:600px){header.top,main{padding-left:16px;padding-right:16px}.tabs{padding:16px}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to main content</a>
+<header class="top">
+<div class="hwrap">
+<!-- LOGO: real ECPI logo file. Path is relative to this HTML file; keep the assets/images folder next to it when you host the lesson. -->
+<img src="assets/images/ECPI_UNIVERSITY_COLOR_WHITE.png" width="233" height="48" alt="ECPI University">
+<div><p class="eyebrow">Guided Practice 1.3</p><h1>1.3 Guided Practice: Battle Run</h1></div>
+</div>
+<div class="prog"><span id="ptxt"></span><progress id="pbar" max="5" value="1" aria-label="Lesson progress"></progress></div>
+</header>
+<nav class="tabsnav" aria-label="Lesson sections"><div class="tabs" id="tabs" role="tablist" aria-label="Lesson sections"><button type="button" class="tab" role="tab" id="tab-review" aria-controls="panel-review" aria-selected="false">Review</button><button type="button" class="tab" role="tab" id="tab-a1" aria-controls="panel-a1" aria-selected="false">Activity 1</button><button type="button" class="tab" role="tab" id="tab-a2" aria-controls="panel-a2" aria-selected="false">Activity 2</button><button type="button" class="tab" role="tab" id="tab-a3" aria-controls="panel-a3" aria-selected="false">Activity 3</button><button type="button" class="tab" role="tab" id="tab-submit" aria-controls="panel-submit" aria-selected="false">Submit</button></div></nav>
+<main id="main" tabindex="-1"><section role="tabpanel" id="panel-review" aria-labelledby="tab-review" hidden>
+<h2 tabindex="-1">Review: What Makes a Strong Algorithm?</h2>
+<p>An algorithm is a set of instructions. A <b>plain-language algorithm</b> describes how to solve a problem using ordinary words. A <b>battle run</b> is one sequence in which two characters take turns attacking until one wins.</p>
+<div class="callout">
+<h3>A good algorithm is&hellip;</h3>
+<ul>
+<li><b>Ordered:</b> the steps happen in a clear sequence.</li>
+<li><b>Specific:</b> each step says exactly what should happen.</li>
+<li><b>Repeatable:</b> someone else could follow it and get the same kind of result.</li>
+<li><b>Conditional:</b> some steps depend on what happens, like whether a character is still alive.</li>
+<li><b>Complete:</b> it has a clear beginning, middle, and end.</li>
+</ul>
+</div>
+<div class="pills" role="tablist" aria-label="Algorithm examples" id="rev"><button type="button" class="pill" role="tab" id="revt0" aria-controls="rev0" aria-selected="false">Weak algorithm</button><button type="button" class="pill" role="tab" id="revt1" aria-controls="rev1" aria-selected="false">Strong algorithm</button><button type="button" class="pill" role="tab" id="revt2" aria-controls="rev2" aria-selected="false">Examine the difference</button></div>
+<div role="tabpanel" id="rev0" aria-labelledby="revt0" class="card" hidden>
+<h3>Weak algorithm</h3>
+<p>&ldquo;The hero fights the monster. They attack each other until someone wins.&rdquo;</p>
+<p>That&rsquo;s too vague. Who attacks first? How is damage calculated? When is health checked? When does it end? It could run forever, and the cloud bill would come every month.</p>
+</div>
+<div role="tabpanel" id="rev1" aria-labelledby="revt1" class="card" hidden>
+<h3>Strong algorithm</h3>
+<p>For each step, choose the label that fits best: <b>Ordered</b>, <b>Conditional</b>, or <b>Repeated</b>. You&rsquo;ll get feedback right away.</p>
+<div id="strongList"></div>
+</div>
+<div role="tabpanel" id="rev2" aria-labelledby="revt2" class="card" hidden>
+<h3>Examine the difference</h3>
+<p>The strong algorithm meets all five qualities. You know who attacks first, how health drops, when defeat is checked, and when the battle stops. You just follow the steps until someone runs out of health.</p>
+<p><b>Push your thinking:</b> Which steps are Boolean logic? Which are repetition? Which are conditions? Use the Strong algorithm tab to explore.</p>
+</div>
+</section><section role="tabpanel" id="panel-a1" aria-labelledby="tab-a1" hidden>
+<h2 tabindex="-1">Activity 1: Trace the Battle Run</h2>
+<div class="scroll" role="region" aria-label="Character data table (scrollable table)" tabindex="0">
+<table><caption>Character Data Table</caption><thead><tr><th scope="col">Character</th><th scope="col">Health</th><th scope="col">Attack</th></tr></thead>
+<tbody><tr><th scope="row">Knight</th><td>25</td><td>6</td></tr><tr><th scope="row">Slime</th><td>18</td><td>3</td></tr></tbody></table>
+</div>
+<p>Fill in each row of the trace using the strong algorithm. Enter the health <b>after</b> each attack. Choose <b>Check my work</b> for feedback, or <b>Show next row</b> if you get stuck.</p>
+<div class="pills" role="tablist" aria-label="Starting attacker" id="tr"><button type="button" class="pill" role="tab" id="trt0" aria-controls="tr0" aria-selected="false">Knight attacks first</button><button type="button" class="pill" role="tab" id="trt1" aria-controls="tr1" aria-selected="false">Slime attacks first</button></div>
+<div role="tabpanel" id="tr0" aria-labelledby="trt0" hidden></div>
+<div role="tabpanel" id="tr1" aria-labelledby="trt1" hidden></div>
+<h3>After you trace, answer</h3>
+<div id="a1q"></div>
+</section><section role="tabpanel" id="panel-a2" aria-labelledby="tab-a2" hidden>
+<h2 tabindex="-1">Activity 2: Modify the Algorithm (Armor Buffering)</h2>
+<p>In this version, after each character receives damage, that character recovers 1 health from armor buffering. Edit the steps below so your algorithm is still ordered, specific, repeatable, conditional, and complete.</p>
+<div class="bar">
+<button type="button" class="btn alt" id="loadStarter">Load the strong algorithm as a starting point</button>
+<button type="button" class="btn alt" id="addStep">+ Add step</button>
+</div>
+<div id="algoList"></div>
+<button type="button" class="btn" id="checkAlgo">Quick self-check</button>
+<div id="algoFeedback" class="msg" role="status"></div>
+<h3>Test it: run the simulator</h3>
+<div class="card">
+<div class="grid">
+<div><label class="lbl" for="sFirst">First attacker</label><select id="sFirst"><option>Knight</option><option>Slime</option></select></div>
+<div><label class="lbl" for="sArmor">Armor buffering</label><select id="sArmor"><option value="1">On (+1 after damage)</option><option value="0">Off</option></select></div>
+<div><label class="lbl" for="sKH">Knight health</label><input type="text" inputmode="numeric" id="sKH" value="25"></div>
+<div><label class="lbl" for="sKA">Knight attack</label><input type="text" inputmode="numeric" id="sKA" value="6"></div>
+<div><label class="lbl" for="sSH">Slime health</label><input type="text" inputmode="numeric" id="sSH" value="18"></div>
+<div><label class="lbl" for="sSA">Slime attack</label><input type="text" inputmode="numeric" id="sSA" value="3"></div>
+</div>
+<div id="simMsg" class="msg" role="status"></div>
+<div id="simTable"></div>
+</div>
+</section><section role="tabpanel" id="panel-a3" aria-labelledby="tab-a3" hidden>
+<h2 tabindex="-1">Activity 3: Final Thought</h2>
+<p>Cost isn&rsquo;t only money. It can be time, effort, memory, processing power, or cloud resources. This calculator uses the battle you last ran in the Activity 2 simulator.</p>
+<div class="card">
+<div class="grid">
+<div><label class="lbl" for="runsSel">How many battle runs?</label><select id="runsSel"><option value="1">1 (once per day)</option><option value="365">365 (once a day for a year)</option><option value="1000000" selected>1,000,000 (one gaming session)</option><option value="custom">Custom&hellip;</option></select></div>
+<div id="customWrap" hidden><label class="lbl" for="runsCustom">Custom number of runs</label><input type="text" inputmode="numeric" id="runsCustom" value="5000"></div>
+<div><label class="lbl" for="stepsTurn">Steps repeated each turn in your algorithm</label><input type="text" inputmode="numeric" id="stepsTurn" value="6"></div>
+</div>
+<div id="costMsg" class="msg" role="status"></div>
+<div id="costOut" class="stats"></div>
+</div>
+<h3>Answer the questions</h3>
+<div id="a3q"></div>
+</section><section role="tabpanel" id="panel-submit" aria-labelledby="tab-submit" hidden>
+<h2 tabindex="-1">Submit</h2>
+<p>Your answers stay in this page while it&rsquo;s open. When you&rsquo;re done, download a Word-compatible file and upload it to your assignment.</p>
+<div id="submit-body"></div>
+<div class="callout">
+<p><b>Desktop:</b> Start Assignment &rarr; Upload File &rarr; Choose File &rarr; Open &rarr; Submit Assignment.</p>
+<p><b>Mobile:</b> Submit Assignment &rarr; File Upload &rarr; select your file &rarr; Submit.</p>
+</div>
+</section></main>
+<footer>ECPI University &middot; CIS.SDC265 Mathematics for AI-Augmented Software Development &middot; Guided Practice 1.3</footer>
+<div id="live" class="sr" role="status" aria-live="polite"></div>
+<script>(function(){'use strict';
+const $=(s,r=document)=>r.querySelector(s);
+const $$=(s,r=document)=>Array.from(r.querySelectorAll(s));
+function h(tag,props,kids){
+  const e=document.createElement(tag);
+  if(props)for(const k in props){const v=props[k];
+    if(k==='text')e.textContent=v;
+    else if(k==='class')e.className=v;
+    else if(k.slice(0,2)==='on')e.addEventListener(k.slice(2),v);
+    else if(v!==false&&v!==null&&v!==undefined)e.setAttribute(k,v);}
+  (kids||[]).forEach(c=>e.append(c));
+  return e;
+}
+const live=$('#live');
+function say(t){live.textContent='';setTimeout(()=>{live.textContent=t},60)}
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fmt=n=>Number(n).toLocaleString('en-US',{maximumFractionDigits:2});
+const pl=(n,w)=>n+' '+w+(n===1?'':'s');
+
+/* ---- answer checkers ---- */
+const normCode=s=>String(s).toLowerCase().replace(/[\u201c\u201d]/g,'"').replace(/[\u2018\u2019]/g,"'")
+  .replace(/&&/g,' and ').replace(/\|\|/g,' or ')
+  .replace(/\s*(<=|>=|!=|==|[<>=+\-])\s*/g,' $1 ').replace(/\s+/g,' ').replace(/[;.]\s*$/,'').trim();
+const code=(...a)=>{const set=a.map(normCode);return v=>set.includes(normCode(v))};
+const num=n=>v=>String(v).replace(/[,\s]/g,'')===String(n);
+const kw=(...r)=>v=>r.every(x=>x.test(v));
+const listForm=s=>String(s).toLowerCase().replace(/[\s'"]/g,'').replace(/[()<>]/g,m=>m==='('||m==='<'?'[':']');
+
+/* ---- DOM builders ---- */
+function mkTable(caption,head,rows,opts){
+  opts=opts||{};
+  const t=h('table',null,[h('caption',{text:caption}),
+    h('thead',null,[h('tr',null,head.map(x=>h('th',{scope:'col',text:x})))]),
+    h('tbody',null,rows.map(r=>h('tr',null,r.map((c,i)=>{
+      const cell=h(i===0&&opts.rowHeader?'th':'td',i===0&&opts.rowHeader?{scope:'row'}:null);
+      if(c instanceof Node)cell.append(c);else cell.textContent=String(c);
+      if(opts.mono&&opts.mono.includes(i))cell.className='mono';
+      return cell;}))))]);
+  return h('div',{class:'scroll',role:'region','aria-label':caption+' (scrollable table)',tabindex:'0'},[t]);
+}
+function mkInput(label,check,model,o){
+  o=o||{};
+  const i=h('input',{type:'text','aria-label':label,autocomplete:'off',spellcheck:'false',maxlength:'200','data-g':'1'});
+  if(o.num){i.setAttribute('inputmode','numeric');i.className='num'}
+  i._check=check;i._model=model;return i;
+}
+function mkSelect(label,options,answer,first){
+  const s=h('select',{'aria-label':label,'data-g':'1'},[h('option',{value:'',text:first||'Choose…'})].concat(options.map(o=>h('option',{value:o,text:o}))));
+  s._check=v=>v===answer;s._model=answer;return s;
+}
+function cellOf(el){return el.closest('[data-cell]')||el.parentElement}
+function mark(el,state){
+  const cell=cellOf(el);
+  cell.classList.remove('ok','bad','shown');
+  let m=$('.mark',cell);
+  if(state==='none'){if(m)m.remove();return}
+  if(!m){m=h('span',{class:'mark'});cell.append(m)}
+  const T={ok:['\u2713','Correct'],bad:['\u2717','Not yet'],blank:['\u2717','Needs an answer'],shown:['','Answer shown']};
+  const t=T[state];
+  cell.classList.add(state==='blank'?'bad':state);
+  const short=!!el.closest('.code,.trace');
+  if(short){m.textContent=t[0]||'\u2022';m.setAttribute('role','img');m.setAttribute('aria-label',t[1])}
+  else{m.textContent=(t[0]?t[0]+' ':'')+t[1];m.removeAttribute('role');m.removeAttribute('aria-label')}
+}
+const graded=scope=>$$('[data-g]',scope);
+function grade(scope){
+  let good=0;const all=graded(scope);
+  all.forEach(i=>{const v=i.value,blank=v.trim()==='',ok=!blank&&i._check(v);if(ok)good++;mark(i,ok?'ok':blank?'blank':'bad')});
+  return{good,total:all.length};
+}
+function reveal(scope){
+  const i=graded(scope).find(x=>!(x.value.trim()&&x._check(x.value)));
+  if(!i)return null;i.value=i._model;mark(i,'shown');i.focus();return i;
+}
+function clearFill(scope){graded(scope).forEach(i=>{i.value='';mark(i,'none')})}
+function confirmBtn(btn,run){
+  const label=btn.textContent;let armed=false,t=null;
+  btn.addEventListener('click',()=>{
+    if(!armed){armed=true;btn.textContent='Click again to confirm';say('Press the button again to confirm.');
+      t=setTimeout(()=>{armed=false;btn.textContent=label},5000);return}
+    clearTimeout(t);armed=false;btn.textContent=label;run();
+  });
+}
+function tools(scope,msg,o){
+  o=o||{};
+  const c=h('button',{type:'button',class:'btn',text:'Check my work'});
+  const r=h('button',{type:'button',class:'btn alt',text:'Show next answer'});
+  const x=h('button',{type:'button',class:'btn alt',text:'Clear answers'});
+  c.addEventListener('click',()=>{
+    const g=grade(scope);
+    msg.className='msg '+(g.good===g.total?'ok':'bad');
+    msg.textContent=g.good===g.total?'\u2713 All '+g.total+' answers are correct. Nice work.'
+      :g.good+' of '+g.total+' answers are correct. Items marked \u2717 need another look.'+(o.hint?' '+o.hint:'');
+    if(o.onCheck)o.onCheck(g);
+  });
+  r.addEventListener('click',()=>{
+    const i=reveal(scope);
+    msg.className='msg';
+    msg.textContent=i?'Answer shown for one item. Read it, then try the next one yourself.':'Every item is already correct.';
+  });
+  confirmBtn(x,()=>{clearFill(scope);msg.className='msg';msg.textContent='Answers cleared.'});
+  return h('div',{class:'bar'},[c,r,x]);
+}
+function qBlock(mount,id,items){
+  items.forEach((q,i)=>{
+    const ta=h('textarea',{id:id+i,maxlength:'3000'});
+    const mid='m_'+id+i;
+    const model=h('div',{class:'model',id:mid,hidden:'hidden'});
+    model.textContent=q[1];
+    const b=h('button',{type:'button',class:'btn alt','aria-expanded':'false','aria-controls':mid,text:'Show model answer'});
+    b.addEventListener('click',()=>{const open=model.hidden;model.hidden=!open;b.setAttribute('aria-expanded',open?'true':'false');b.textContent=open?'Hide model answer':'Show model answer'});
+    mount.append(h('div',{class:'q'},[h('label',{for:id+i,text:(i+1)+'. '+q[0]}),ta,b,model]));
+  });
+}
+function tabset(list,after){
+  const t=$$('[role=tab]',list),p=t.map(b=>document.getElementById(b.getAttribute('aria-controls')));
+  function sel(i,focusTab){
+    t.forEach((b,j)=>{const on=i===j;b.setAttribute('aria-selected',on?'true':'false');b.tabIndex=on?0:-1;p[j].hidden=!on});
+    if(focusTab)t[i].focus();
+    if(after)after(i);
+  }
+  t.forEach((b,i)=>{
+    b.addEventListener('click',()=>sel(i));
+    b.addEventListener('keydown',e=>{
+      let n=null;const k=e.key;
+      if(k==='ArrowRight'||k==='ArrowDown')n=(i+1)%t.length;
+      else if(k==='ArrowLeft'||k==='ArrowUp')n=(i-1+t.length)%t.length;
+      else if(k==='Home')n=0;else if(k==='End')n=t.length-1;
+      if(n!==null){e.preventDefault();sel(n,true)}
+    });
+  });
+  sel(0);
+  return{sel,panels:p,tabs:t};
+}
+
+/* ---- battle engine used by several lessons ---- */
+function battle(a,b,first,armor){
+  const s={a:{n:a.n,hp:a.hp,atk:a.atk},b:{n:b.n,hp:b.hp,atk:b.atk}};
+  let att=first==='a'?'a':'b';const rows=[];let winner=null,loop=false;
+  for(let t=1;;t++){
+    if(t>500){loop=true;break}
+    const df=att==='a'?'b':'a';
+    s[df].hp-=s[att].atk;
+    let txt=s[att].n+' attacks '+s[df].n+' for '+s[att].atk+' damage.';
+    if(s[df].hp<=0){winner=s[att].n;txt+=' '+s[df].n+' is defeated. '+s[att].n+' wins.';
+      rows.push({turn:t,att:s[att].n,def:s[df].n,ahp:s.a.hp,bhp:s.b.hp,txt});break}
+    if(armor){s[df].hp+=1;txt+=' '+s[df].n+' recovers 1 health from armor.'}
+    rows.push({turn:t,att:s[att].n,def:s[df].n,ahp:s.a.hp,bhp:s.b.hp,txt});
+    att=df;
+  }
+  return{rows,winner,loop,turns:loop?500:rows.length};
+}
+
+/* ---- export (download / copy) ---- */
+function readTable(t){
+  const cap=$('caption',t);
+  const head=$$('thead th',t).filter(x=>!x.hasAttribute('data-skip')).map(x=>x.textContent.trim());
+  const rows=[];
+  $$('tbody tr',t).forEach(tr=>{
+    const fields=$$('input,select,textarea',tr);
+    if(fields.length&&fields.every(f=>f.value.trim()===''))return;
+    rows.push($$('th,td',tr).filter(c=>!c.hasAttribute('data-skip')).map(c=>{
+      const f=$$('input,select,textarea',c);
+      if(f.length)return f.map(x=>x.value).join(' | ');
+      const k=c.cloneNode(true);$$('.mark',k).forEach(m=>m.remove());return k.textContent.trim();
+    }));
+  });
+  return{t:'table',title:cap?cap.textContent.trim():'',head,rows};
+}
+function readQA(id,qs){return qs.map((q,i)=>({t:'qa',q:(i+1)+'. '+q,a:($('#'+id+i)||{value:''}).value}))}
+function toText(title,name,blocks){
+  let o=title+'\nName: '+name+'\n';
+  blocks.forEach(b=>{
+    if(b.t==='h')o+='\n'+b.text.toUpperCase()+'\n';
+    else if(b.t==='p')o+='\n'+b.text+'\n';
+    else if(b.t==='qa')o+='\n'+b.q+'\n'+b.a+'\n';
+    else if(b.t==='ol')o+='\n'+b.items.map((x,i)=>(i+1)+'. '+x).join('\n')+'\n';
+    else if(b.t==='pre')o+='\n'+b.text+'\n';
+    else if(b.t==='table')o+='\n'+b.title+'\n'+b.head.join(' | ')+'\n'+b.rows.map(r=>r.join(' | ')).join('\n')+'\n';
+  });
+  return o;
+}
+function toDoc(title,name,blocks){
+  let o='<html><head><meta charset="utf-8"><title>'+esc(title)+'</title><style>body{font-family:Arial,sans-serif;font-size:11pt}h1,h2{color:#0d1b3e}table{border-collapse:collapse}th{background:#0d1b3e;color:#ffffff}td,th{border:1px solid #333333;padding:4px}pre{font-family:Consolas,monospace}</style></head><body><h1>'+esc(title)+'</h1><p><b>Name:</b> '+esc(name)+'</p>';
+  blocks.forEach(b=>{
+    if(b.t==='h')o+='<h2>'+esc(b.text)+'</h2>';
+    else if(b.t==='p')o+='<p>'+esc(b.text).replace(/\n/g,'<br>')+'</p>';
+    else if(b.t==='qa')o+='<p><b>'+esc(b.q)+'</b><br>'+esc(b.a).replace(/\n/g,'<br>')+'</p>';
+    else if(b.t==='ol')o+='<ol>'+b.items.map(x=>'<li>'+esc(x)+'</li>').join('')+'</ol>';
+    else if(b.t==='pre')o+='<pre>'+esc(b.text)+'</pre>';
+    else if(b.t==='table')o+='<p><i>'+esc(b.title)+'</i></p><table><tr>'+b.head.map(x=>'<th>'+esc(x)+'</th>').join('')+'</tr>'+b.rows.map(r=>'<tr>'+r.map(x=>'<td>'+esc(x)+'</td>').join('')+'</tr>').join('')+'</table>';
+  });
+  return o+'</body></html>';
+}
+
+/* ---- shell: tabs, progress, back/continue, submit panel ---- */
+function shell(cfg){
+  const bar=$('#pbar'),ptxt=$('#ptxt');
+  let main=null;
+  main=tabset($('#tabs'),i=>{
+    if(!main)return;
+    bar.value=i+1;
+    ptxt.textContent='Section '+(i+1)+' of '+bar.max+': '+main.tabs[i].textContent;
+  });
+  bar.max=main.tabs.length;
+  main.sel(0);
+  main.panels.forEach((p,i)=>{
+    const nav=h('div',{class:'pnav'});
+    if(i>0)nav.append(h('button',{type:'button',class:'btn alt',text:'\u2190 Back: '+main.tabs[i-1].textContent,onclick:()=>go(i-1)}));
+    else nav.append(h('span'));
+    if(i<main.panels.length-1)nav.append(h('button',{type:'button',class:'btn',text:'Continue: '+main.tabs[i+1].textContent+' \u2192',onclick:()=>go(i+1)}));
+    p.append(nav);
+  });
+  function go(i){main.sel(i);const hd=$('h2',main.panels[i]);hd.focus({preventScroll:true});window.scrollTo({top:0,behavior:'auto'})}
+  const sub=$('#submit-body');
+  if(sub){
+    const nameIn=h('input',{type:'text',id:'stuName',maxlength:'100',autocomplete:'name','aria-required':'true','aria-describedby':'nameHelp'});
+    const help=h('div',{id:'nameHelp',class:'msg',role:'status'});
+    const out=h('div',{class:'msg',role:'status'});
+    function ready(){
+      const n=nameIn.value.trim();
+      if(!n){nameIn.setAttribute('aria-invalid','true');help.className='msg bad';help.textContent='\u2717 Enter your name in the box above so your instructor can identify your work.';nameIn.focus();return null}
+      nameIn.removeAttribute('aria-invalid');help.className='msg';help.textContent='';return n;
+    }
+    const dl=h('button',{type:'button',class:'btn',text:'Download my responses (.doc)'});
+    const cp=h('button',{type:'button',class:'btn alt',text:'Copy responses as text'});
+    dl.addEventListener('click',()=>{
+      const n=ready();if(!n)return;
+      const blob=new Blob(['\ufeff'+toDoc(cfg.title,n,cfg.collect())],{type:'application/msword'});
+      const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=cfg.file;
+      document.body.appendChild(a);a.click();a.remove();
+      out.className='msg ok';out.textContent='\u2713 Download started. If nothing downloaded, use \u201cCopy responses as text\u201d and paste into Word.';
+    });
+    cp.addEventListener('click',async()=>{
+      const n=ready();if(!n)return;
+      const t=toText(cfg.title,n,cfg.collect());
+      try{await navigator.clipboard.writeText(t);out.className='msg ok';out.textContent='\u2713 Copied. Paste it into a Word document.'}
+      catch(e){out.className='msg bad';out.textContent='\u2717 Your browser blocked copying. Use \u201cDownload my responses\u201d instead.'}
+    });
+    sub.append(h('div',{class:'q'},[h('label',{for:'stuName',text:'Your name (required)'}),nameIn]),help,dl,cp,out);
+  }
+}
+
+const STRONG=[
+["Start the battle with a hero and a monster.","Ordered"],
+["Give each character a health value and an attack value.","Ordered"],
+["The hero attacks first.","Ordered"],
+["Subtract the hero\u2019s attack value from the monster\u2019s health.","Ordered"],
+["Check whether the monster\u2019s health is 0 or less.","Conditional"],
+["If the monster\u2019s health is 0 or less, the hero wins, and the battle ends.","Conditional"],
+["If the monster is still alive, the monster attacks the hero.","Conditional"],
+["Subtract the monster\u2019s attack value from the hero\u2019s health.","Ordered"],
+["Check whether the hero\u2019s health is 0 or less.","Conditional"],
+["If the hero\u2019s health is 0 or less, the monster wins, and the battle ends.","Conditional"],
+["If both characters are still alive, repeat the attack steps until one character\u2019s health reaches 0 or less.","Repeated"]];
+tabset($('#rev'));
+tabset($('#tr'));
+
+/* Review: label each step of the strong algorithm */
+STRONG.forEach((s,i)=>{
+  const fb=h('p',{class:'msg',role:'status'});
+  const opts=h('div',{class:'opts'});
+  ['Ordered','Conditional','Repeated'].forEach(k=>{
+    const id='st'+i+k;
+    const r=h('input',{type:'radio',name:'st'+i,id:id,value:k});
+    r.addEventListener('change',()=>{
+      const ok=k===s[1];
+      fb.className='msg '+(ok?'ok':'bad');
+      fb.textContent=ok?'\u2713 '+k+': yes, that fits.':'\u2717 Not quite. Try another label.';
+    });
+    opts.append(h('label',{for:id},[r,k]));
+  });
+  $('#strongList').append(h('fieldset',null,[h('legend',{text:(i+1)+'. '+s[0]}),opts,fb]));
+});
+
+/* Activity 1: trace tables */
+function kSim(first,armor,kh,ka,sh,sa){
+  const r=battle({n:'Knight',hp:kh,atk:ka},{n:'Slime',hp:sh,atk:sa},first==='Knight'?'a':'b',armor);
+  r.rows.forEach(x=>{x.k=x.ahp;x.s=x.bhp});
+  return r;
+}
+function makeTrace(boxId,first){
+  const box=$('#'+boxId),exp=kSim(first,false,25,6,18,3).rows,N=6,rows=[];
+  const sel=l=>h('select',{'aria-label':l},[h('option',{value:'',text:'\u2014'}),h('option',{value:'Knight',text:'Knight'}),h('option',{value:'Slime',text:'Slime'})]);
+  const tb=h('tbody');
+  for(let i=0;i<N;i++){
+    const r={
+      att:sel('Turn '+(i+1)+' attacker'),def:sel('Turn '+(i+1)+' defender'),
+      k:h('input',{type:'text',inputmode:'numeric','aria-label':'Turn '+(i+1)+' Knight health',class:'num',maxlength:'4'}),
+      s:h('input',{type:'text',inputmode:'numeric','aria-label':'Turn '+(i+1)+' Slime health',class:'num',maxlength:'4'}),
+      w:h('input',{type:'text','aria-label':'Turn '+(i+1)+' what happened',maxlength:'200'}),
+      st:h('td',{'data-skip':'1'})};
+    rows.push(r);
+    tb.append(h('tr',null,[h('th',{scope:'row',class:'c',text:String(i+1)}),h('td',null,[r.att]),h('td',null,[r.def]),h('td',null,[r.k]),h('td',null,[r.s]),h('td',null,[r.w]),r.st]));
+  }
+  const head=['Turn','Attacker','Defender','Knight Health','Slime Health','What Happened?'];
+  const table=h('table',null,[h('caption',{text:'Battle Trace Table, '+first+' Attacks First'}),
+    h('thead',null,[h('tr',null,head.map(x=>h('th',{scope:'col',text:x})).concat([h('th',{scope:'col','data-skip':'1',text:'Status'})]))]),tb]);
+  const msg=h('div',{class:'msg',role:'status'});
+  const check=h('button',{type:'button',class:'btn',text:'Check my work'});
+  const next=h('button',{type:'button',class:'btn alt',text:'Show next row'});
+  const clear=h('button',{type:'button',class:'btn alt',text:'Clear'});
+  box.classList.add('trace');
+  box.append(h('div',{class:'scroll',role:'region','aria-label':'Trace table for '+first+' attacks first (scrollable table)',tabindex:'0'},[table]),h('div',{class:'bar'},[check,next,clear]),msg);
+  check.addEventListener('click',()=>{
+    let good=0,extra=false;
+    rows.forEach((r,i)=>{
+      const ctl=[r.att,r.def,r.k,r.s];
+      if(i<exp.length){
+        const x=exp[i],want=[x.att,x.def,String(x.k),String(x.s)];let all=true;
+        ctl.forEach((c,j)=>{const v=c.value.trim(),ok=v===want[j];if(!ok)all=false;mark(c,v===''?'blank':ok?'ok':'bad')});
+        r.st.textContent=all?'\u2713 Row correct':'\u2717 Check this row';
+        if(all)good++;
+      }else{
+        const any=ctl.some(c=>c.value.trim()!=='');
+        ctl.forEach(c=>mark(c,any?'bad':'none'));
+        r.st.textContent=any?'\u2717 Not needed: the battle already ended':'';
+        if(any)extra=true;
+      }
+    });
+    const perfect=good===exp.length&&!extra;
+    msg.className='msg '+(perfect?'ok':'bad');
+    msg.textContent=perfect?'\u2713 Perfect trace! The battle ends on turn '+exp.length+'.'
+      :good+' of '+exp.length+' rows are fully correct.'+(extra?' Rows marked \u2717 beyond the last turn are not needed because the battle already ended.':'')+' Remember: subtract only the attacker\u2019s attack value from the defender, one attack per turn.';
+  });
+  next.addEventListener('click',()=>{
+    const i=rows.findIndex((r,ix)=>ix<exp.length&&!(r.att.value===exp[ix].att&&r.def.value===exp[ix].def&&r.k.value.trim()===String(exp[ix].k)&&r.s.value.trim()===String(exp[ix].s)));
+    if(i<0){msg.className='msg';msg.textContent='Every needed row is already correct. Choose Check my work.';return}
+    const r=rows[i],x=exp[i];r.att.value=x.att;r.def.value=x.def;r.k.value=String(x.k);r.s.value=String(x.s);r.w.value=x.txt;
+    msg.className='msg';msg.textContent='Row '+(i+1)+' filled in. Study it, then try the next row yourself.';
+  });
+  confirmBtn(clear,()=>{rows.forEach(r=>{[r.att,r.def,r.k,r.s,r.w].forEach(c=>{c.value='';mark(c,'none')});r.st.textContent=''});msg.className='msg';msg.textContent='Trace cleared.'});
+}
+makeTrace('tr0','Knight');makeTrace('tr1','Slime');
+
+const Q1=["What changes when the starting attacker changes?","Does the same character win both times?","Why does the order of steps matter in an algorithm?"];
+qBlock($('#a1q'),'a1_',[
+[Q1[0],"The battle takes one more turn (6 instead of 5), and the Knight ends with less health (16 instead of 19), because the Slime gets an extra attack."],
+[Q1[1],"Yes. The Knight wins both times. It deals 6 damage per turn against the Slime\u2019s 3, and it has more health."],
+[Q1[2],"Order decides who is damaged first, when defeat is checked, and when the battle ends. If the defeat check came after the next attack, a defeated Slime would still hit the Knight. Changing the order changes the outcome."]]);
+const Q3=["How many repeated steps did your battle run require?","What would happen if this battle run had to happen once per day?","What would happen if it had to happen 1,000,000 times during one gaming session?","Why might a poorly written algorithm become expensive, slow, or frustrating at scale?"];
+qBlock($('#a3q'),'a3_',[
+[Q3[0],"Use the calculator above: turns \u00d7 the steps your algorithm repeats each turn. For the armor version with the Knight attacking first, that\u2019s 7 turns, so about 42 step executions if your algorithm repeats 6 steps per turn."],
+[Q3[1],"Almost nothing. A few turns is a tiny amount of time, memory, and processing."],
+[Q3[2],"About 7 million turns and roughly 42 million step executions. Each run is cheap, but the total uses real processing time and cloud resources."],
+[Q3[3],"Any wasted or unclear step is multiplied by every repetition. A vague algorithm with no reachable stopping point could loop forever. At scale, small inefficiencies add up to lag, higher bills, and more effort to fix."]]);
+
+/* Activity 2: algorithm builder */
+let algo=[''],focusReq=null;
+function renderAlgo(){
+  const list=$('#algoList');list.textContent='';const btns=[];
+  algo.forEach((t,i)=>{
+    const ta=h('textarea',{'aria-label':'Step '+(i+1),maxlength:'500'});ta.value=t;
+    ta.addEventListener('input',()=>{algo[i]=ta.value});
+    const up=h('button',{type:'button',class:'btn alt','aria-label':'Move step '+(i+1)+' up',text:'\u2191 Up'});
+    const dn=h('button',{type:'button',class:'btn alt','aria-label':'Move step '+(i+1)+' down',text:'\u2193 Down'});
+    const del=h('button',{type:'button',class:'btn alt','aria-label':'Delete step '+(i+1),text:'\u2715 Delete'});
+    up.addEventListener('click',()=>{if(i>0){[algo[i-1],algo[i]]=[algo[i],algo[i-1]];focusReq=['up',i-1];renderAlgo();say('Step moved up to position '+i+'.')}});
+    dn.addEventListener('click',()=>{if(i<algo.length-1){[algo[i+1],algo[i]]=[algo[i],algo[i+1]];focusReq=['dn',i+1];renderAlgo();say('Step moved down to position '+(i+2)+'.')}});
+    del.addEventListener('click',()=>{algo.splice(i,1);if(!algo.length)algo=[''];focusReq=['ta',Math.min(i,algo.length-1)];renderAlgo();say('Step deleted.')});
+    btns.push({ta,up,dn,del});
+    list.append(h('div',{class:'step'},[h('div',{class:'n',text:(i+1)+'.'}),ta,up,dn,del]));
+  });
+  if(focusReq){const b=btns[focusReq[1]];if(b)b[focusReq[0]].focus();focusReq=null}
+}
+$('#addStep').addEventListener('click',()=>{algo.push('');focusReq=['ta',algo.length-1];renderAlgo()});
+(function(){
+  const b=$('#loadStarter'),label=b.textContent;let armed=false,t=null;
+  b.addEventListener('click',()=>{
+    if(algo.some(x=>x.trim())&&!armed){armed=true;b.textContent='Replace my steps? Click again to confirm';say('Press the button again to replace your steps.');t=setTimeout(()=>{armed=false;b.textContent=label},5000);return}
+    clearTimeout(t);armed=false;b.textContent=label;algo=STRONG.map(s=>s[0]);focusReq=['ta',0];renderAlgo();say('Starter algorithm loaded.');
+  });
+})();
+$('#checkAlgo').addEventListener('click',()=>{
+  const t=algo.join(' ').toLowerCase(),n=algo.filter(x=>x.trim()).length;
+  const tests=[
+    [n>=5,'Ordered: you have at least 5 steps in a clear sequence.','Add more steps. Each action should get its own step.'],
+    [/armor|recover|add 1|\+ ?1|increase/.test(t),'Armor buffering: you mention recovering 1 health.','Add a step where the defender recovers 1 health after taking damage.'],
+    [(/subtract/.test(t)&&/\d/.test(t))||/attack value/.test(t),'Specific: damage is calculated with exact values.','Say exactly what is subtracted from what.'],
+    [/\bif\b/.test(t)&&/0 or less|zero|defeated|dead/.test(t),'Conditional: you check for defeat with an \u201cif\u201d.','Add an \u201cif health is 0 or less\u201d step.'],
+    [/repeat|loop|until/.test(t),'Repeatable: the attack steps repeat.','Add a step that repeats the attack steps until someone is defeated.'],
+    [/(start|begin)/.test(t)&&/(end|wins|stops)/.test(t),'Complete: you have a clear beginning and ending.','Include a clear start and a step that says the battle ends.']];
+  const fb=$('#algoFeedback');fb.textContent='';fb.className='msg';
+  const ul=h('ul');
+  tests.forEach(x=>ul.append(h('li',{text:(x[0]?'\u2713 ':'\u2717 ')+(x[0]?x[1]:x[2])})));
+  fb.append(ul,h('p',{text:'Think about this too: should a defeated character recover 1 health? Decide, and make your steps say so. This quick check only looks for key words, so it isn\u2019t a grade.'}));
+});
+renderAlgo();
+
+/* Activity 2: simulator */
+let lastSim=null;
+function readInt(id,min,max,label,errs){
+  const v=$('#'+id).value.trim(),n=Number(v);
+  if(v===''||!Number.isInteger(n)||n<min||n>max){errs.push(label+' must be a whole number from '+fmt(min)+' to '+fmt(max)+'.');return null}
+  return n;
+}
+function runSim(){
+  const errs=[];
+  const kh=readInt('sKH',1,9999,'Knight health',errs),ka=readInt('sKA',0,9999,'Knight attack',errs),
+        sh=readInt('sSH',1,9999,'Slime health',errs),sa=readInt('sSA',0,9999,'Slime attack',errs);
+  const m=$('#simMsg'),tbl=$('#simTable');tbl.textContent='';
+  if(errs.length){m.className='msg bad';m.textContent='\u2717 '+errs.join(' ');lastSim=null;updateCost();return}
+  const first=$('#sFirst').value,armor=$('#sArmor').value==='1';
+  const r=kSim(first,armor,kh,ka,sh,sa);
+  lastSim={turns:r.turns,winner:r.winner,loop:r.loop,first:first,armor:armor};
+  if(r.loop){m.className='msg bad';m.textContent='\u26a0 This battle never ends (500-turn safety limit reached). Armor recovery cancels out the damage. That is exactly how an algorithm without a reachable stopping point costs you money.'}
+  else{m.className='msg ok';m.textContent='\u2713 '+r.winner+' wins after '+pl(r.turns,'turn')+'.'}
+  tbl.append(mkTable('Simulator trace'+(r.rows.length>12?' (first 12 turns shown)':''),['Turn','Attacker','Defender','Knight Health','Slime Health','What Happened?'],
+    r.rows.slice(0,12).map(x=>[String(x.turn),x.att,x.def,String(x.k),String(x.s),x.txt])));
+  updateCost();
+}
+['sFirst','sArmor','sKH','sKA','sSH','sSA'].forEach(id=>$('#'+id).addEventListener('input',runSim));
+
+/* Activity 3: cost calculator */
+function card(big,small){return h('div',{class:'stat'},[h('b',{text:big}),h('span',{text:small})])}
+function updateCost(){
+  const custom=$('#runsSel').value==='custom';
+  $('#customWrap').hidden=!custom;
+  const m=$('#costMsg'),out=$('#costOut');out.textContent='';
+  if(!lastSim){m.className='msg bad';m.textContent='\u2717 Fix the simulator inputs on the Activity 2 tab first, so there is a battle to scale.';return}
+  const errs=[];
+  const runs=custom?readInt('runsCustom',1,1000000000,'Custom number of runs',errs):parseInt($('#runsSel').value,10);
+  const spt=readInt('stepsTurn',1,100,'Steps per turn',errs);
+  if(errs.length){m.className='msg bad';m.textContent='\u2717 '+errs.join(' ');return}
+  const steps=lastSim.turns*spt;
+  m.className='msg';
+  m.textContent=lastSim.loop?'Your last simulation never ended, so this is capped at 500 turns per run.':'Based on your last simulation: '+lastSim.first+' attacks first, armor '+(lastSim.armor?'on':'off')+'.';
+  out.append(card(fmt(lastSim.turns),'turns per battle'),card(fmt(steps),'step executions per battle'),card(fmt(runs*lastSim.turns),'total turns'),card(fmt(steps*runs),'total step executions'));
+}
+['runsSel','runsCustom','stepsTurn'].forEach(id=>$('#'+id).addEventListener('input',updateCost));
+runSim();
+
+shell({
+  title:'1.3 Guided Practice: Battle Run',file:'1.3_Guided_Practice_Battle_Run.doc',
+  collect:()=>{
+    const b=[{t:'h',text:'Activity 1'},readTable($('#tr0 table')),readTable($('#tr1 table'))].concat(readQA('a1_',Q1));
+    b.push({t:'h',text:'Activity 2: Revised algorithm'},{t:'ol',items:algo.filter(x=>x.trim())});
+    if(lastSim)b.push({t:'p',text:'Simulator check: '+lastSim.first+' attacks first, armor '+(lastSim.armor?'on':'off')+': '+(lastSim.winner||'no winner')+' after '+pl(lastSim.turns,'turn')+'.'});
+    b.push({t:'h',text:'Activity 3'});
+    return b.concat(readQA('a3_',Q3));
+  }
+});
+})();</script>
+</body>
+</html>
